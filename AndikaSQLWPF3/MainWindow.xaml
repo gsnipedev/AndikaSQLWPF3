@@ -95,7 +95,7 @@
             <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
                 <Button Click="AddData">Tambah</Button>
                 <Button>Simpan</Button>
-                <Button>Hapus</Button>
+                <Button Click="DeleteData">Hapus</Button>
             </StackPanel>
 
             <Grid Grid.Row="2">
@@ -106,9 +106,14 @@
 
                 <TextBlock>Search By</TextBlock>
 
-                <ComboBox Grid.Column="2" Text="Semester" VerticalAlignment="Top">
-                    <ComboBoxItem>Anjai</ComboBoxItem>
-                    <ComboBoxItem>Anjai 2</ComboBoxItem>
+                <ComboBox Grid.Column="2" Text="Semester" VerticalAlignment="Top" Name="search_combobox">
+
+                    <ComboBoxItem IsSelected="True" Tag="All">All</ComboBoxItem>
+                    <ComboBoxItem Tag="kode">Kode</ComboBoxItem>
+                    <ComboBoxItem Tag="mata_kuliah">Mata Kuliah</ComboBoxItem>
+                    <ComboBoxItem Tag="sks">Sks</ComboBoxItem>
+                    <ComboBoxItem Tag="semester">Semester</ComboBoxItem>
+                    <ComboBoxItem Tag="jurusan">Jurusan</ComboBoxItem>
                 </ComboBox>
 
             </Grid>

@@ -137,9 +137,19 @@ namespace AndikaSQLWPF3
             jurusan_box.Text = String.Empty;
         }
 
-        private void Search(string param)
+        private void Search(string param, string cond)
         {
-            string queryString = "SELECT * FROM study where kode LIKE @param OR mata_kuliah LIKE @param OR sks LIKE @param OR semester LIKE @param OR jurusan LIKE @param";
+            string queryString = "";
+
+            if(cond == "All")
+            {
+                queryString = "SELECT * FROM study where kode LIKE @param OR mata_kuliah LIKE @param OR sks LIKE @param OR semester LIKE @param OR jurusan LIKE @param";
+            }
+            else
+            {
+                queryString = "SELECT * FROM study where " + cond + " LIKE @param";
+            }
+            
             SqlCommand command = new(queryString, sqlConnection);
             command.Parameters.AddWithValue("@param", "%" + param + "%");
 
@@ -167,11 +177,58 @@ namespace AndikaSQLWPF3
 
         private void SearchKeydown(object sender, System.Windows.Input.KeyEventArgs e)
         {
+
+
             if (e.Key != System.Windows.Input.Key.Enter) return;
 
             string searchedValue = search_box.Text;
+            string cond = ((ComboBoxItem)search_combobox.SelectedValue).Tag.ToString();
 
-            Search(searchedValue);
+            Search(searchedValue, cond);
+
+            
+        }
+
+        private void DeleteData(object sender, RoutedEventArgs e)
+        {
+            dynamic items = main_list.SelectedItems;
+
+            string data = "";
+
+            for (int i = 0; i < items.Count; i++)
+            {
+                if(i < items.Count - 1)
+                {
+                    data += (items[i].Kode + " ");
+                    continue;
+                }
+
+                data += (items[i].Kode);
+            }
+
+            string queryString = "DELETE FROM study WHERE kode IN (select * from STRING_SPLIT(@data, ' '))";
+
+            SqlCommand command = new(queryString, sqlConnection);
+            command.Parameters.AddWithValue("@data", data);
+
+            sqlConnection.Open();
+
+            try
+            {
+                command.ExecuteNonQuery();     
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                sqlConnection.Close();
+                Refresh();
+            }
+            
+
         }
     }
 }
